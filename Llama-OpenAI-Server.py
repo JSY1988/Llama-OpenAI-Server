@@ -2174,12 +2174,14 @@ class TrayApp(QWidget):
         self.stop_action = QAction("停止服务", self)
         self.restart_action = QAction("重启服务", self)
         self.settings_action = QAction("设置", self)
+        self.help_action = QAction("使用帮助", self)
         self.quit_action = QAction("退出", self)
 
         self.start_action.triggered.connect(self.start_service)
         self.stop_action.triggered.connect(self.stop_service)
         self.restart_action.triggered.connect(self.restart_service)
         self.settings_action.triggered.connect(self.show_settings)
+        self.help_action.triggered.connect(self.show_help)
         self.quit_action.triggered.connect(self.quit_app)
 
         menu.addAction(self.start_action)
@@ -2187,6 +2189,8 @@ class TrayApp(QWidget):
         menu.addAction(self.restart_action)
         menu.addSeparator()
         menu.addAction(self.settings_action)
+        menu.addSeparator()
+        menu.addAction(self.help_action)
         menu.addSeparator()
         menu.addAction(self.quit_action)
 
@@ -2324,6 +2328,54 @@ class TrayApp(QWidget):
         else:
             logger.info(f"模型已更新为 {model_file}，服务未启动")
         self.update_tray_icon()
+
+    def show_help(self):
+        """显示使用帮助对话框"""
+        help_text = """<h2>📖 Llama-OpenAI-Server 使用帮助</h2>
+<hr>
+<h3>🚀 快速入门</h3>
+<p>1. 将 <code>llama-server.exe</code> 放入 <code>llama.cpp/</code> 目录</p>
+<p>2. 将 GGUF 模型文件放入 <code>Model/</code> 目录</p>
+<p>3. 点击系统托盘 <b>启动服务</b> 开始运行</p>
+<p>4. 浏览器访问 <a href='http://127.0.0.1:8223'>http://127.0.0.1:8223</a> 查看 Web 管理页面</p>
+<hr>
+<h3>🖱️ 系统托盘操作</h3>
+<p>• <b>启动服务</b> — 启动 llama-server 后端 + Flask 代理</p>
+<p>• <b>停止服务</b> — 停止所有服务</p>
+<p>• <b>重启服务</b> — 重启所有服务</p>
+<p>• <b>设置</b> — 打开可视化配置界面</p>
+<p>• <b>双击托盘图标</b> — 快速打开设置界面</p>
+<hr>
+<h3>🌐 API 端点</h3>
+<p>代理地址：<code>http://127.0.0.1:{self.config.proxy_port}</code></p>
+<p>• <code>GET /v1/models</code> — 模型列表</p>
+<p>• <code>POST /v1/chat/completions</code> — 对话补全（支持流式 SSE）</p>
+<p>• <code>POST /v1/completions</code> — 文本补全（支持流式 SSE）</p>
+<p>• <code>POST /v1/embeddings</code> — 嵌入向量</p>
+<p>• <code>POST /v1/chat/completions_with_file</code> — 文件上传对话</p>
+<p>• <code>POST /v1/models/switch</code> — 切换模型</p>
+<p>• <code>GET /v1/models/files</code> — GGUF 文件列表</p>
+<p>• <code>GET /health</code> — 健康检查</p>
+<hr>
+<h3>⚙️ 设置说明</h3>
+<p>• <b>模型设置</b> — 选择 GGUF 模型、视觉模型、上下文长度、CPU 线程数</p>
+<p>• <b>AI 采样参数</b> — 温度、Top P/K、重复/存在惩罚、最大 Token、系统提示词</p>
+<p>• <b>硬件与网络</b> — 后端类型 (CUDA/Vulkan/CPU)、GPU 设备、端口、GPU 层数等</p>
+<p>• <b>智能参数推荐</b> — 自动根据硬件配置最佳参数，一键应用</p>
+<hr>
+<h3>💡 提示</h3>
+<p>• 服务启动后，任何兼容 OpenAI 的客户端均可连接使用</p>
+<p>• Web 页面 <code>/docs</code> 提供带转义的 curl 命令示例，可直接复制到 cmd 执行</p>
+<p>• 所有数据处理均在本地完成，不会外传</p>
+"""
+        msg = QMessageBox(self)
+        msg.setWindowTitle("使用帮助")
+        msg.setTextFormat(Qt.RichText)
+        msg.setText(help_text)
+        msg.setIcon(QMessageBox.Information)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setMinimumSize(600, 500)
+        msg.exec_()
 
     def quit_app(self):
         if hasattr(self, 'status_timer'):
