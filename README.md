@@ -15,7 +15,7 @@ llama-server.exe 前端 GUI — OpenAI 兼容格式 API 服务器
 ### 环境要求
 - Windows 7+ 系统
 - Python 3.8+（或直接运行已打包的 exe）
-- `llama-server.exe`（从 llama.cpp 项目获取，放入 `llama.cpp/` 目录）
+- `llama-server.exe`（从 Llama.cpp 编译后的 项目获取，放入 `Llama/` 目录）
 - GGUF 格式模型文件（放入 `Model/` 目录）
 
 ### 运行方式
@@ -138,7 +138,7 @@ Llama-OpenAI-Server/
 ├── config.ini               # 配置文件（自动生成）
 ├── requirements.txt         # Python 依赖
 ├── Python_Update_Cfg.bat    # 配置更新脚本
-├── llama.cpp/               # 放置 llama-server.exe 的目录
+├── llama/           # 放置 llama-server.exe 的目录
 │   └── llama-server.exe
 ├── Model/                   # 放置 GGUF 模型文件的目录
 │   └── *.gguf
